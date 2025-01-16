@@ -1,2 +1,3 @@
-# OpenVPN Library
-OpenVPN Library for openvpn_flutter Plugin
+# OpenVPN Library for easyopenvpn_flutter Plugin
+
+Addressing Android 12+ restrictions on foreground services

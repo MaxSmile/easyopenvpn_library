@@ -3,15 +3,38 @@
     xmlns:tools="http://schemas.android.com/tools"
     package="de.blinkt.openvpn">
 
+    <!-- Required permissions for the VPN application -->
+
+    <!-- Permission to access the internet, necessary for establishing VPN connections -->
     <uses-permission android:name="android.permission.INTERNET" />
+
+    <!-- Permission to check network state, used to monitor the status of the network connection -->
     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
+
+    <!-- Permission to run foreground services, required for long-running tasks like maintaining VPN connections -->
     <uses-permission android:name="android.permission.FOREGROUND_SERVICE" />
-    <uses-permission android:name="android.permission.POST_NOTIFICATIONS"/>
+
+    <!-- Permission to post notifications, required for Android 13 (API 33) and above -->
+    <uses-permission android:name="android.permission.POST_NOTIFICATIONS" />
+
     <application>
-        <activity android:name=".VPNHelper"
+        <!-- Activity: VPNHelper -->
+        <!--
+            Purpose: This activity likely provides utility functions or a user interface for VPN management.
+            - `android:exported="true"` allows this activity to be launched by components outside the app. 
+            Ensure this is necessary for the app functionality, as it can pose security risks.
+        -->
+        <activity 
+            android:name=".VPNHelper"
             android:exported="true"
             tools:ignore="Instantiatable" />
-        <!-- Begin Activity by ics-openvpn -->
+
+        <!-- Service: OpenVPNService -->
+        <!--
+            Purpose: Core service that handles VPN functionality.
+            - `android:permission="android.permission.BIND_VPN_SERVICE"` ensures only the system can bind this service.
+            - The `intent-filter` allows the service to be recognized as a VPN service by the Android OS.
+        -->
         <service
             android:name=".core.OpenVPNService"
             android:exported="true"
@@ -21,6 +44,12 @@
             </intent-filter>
         </service>
 
+        <!-- Activity: LaunchVPN -->
+        <!--
+            Purpose: Entry point for launching the VPN functionality.
+            - `android:excludeFromRecents="true"` prevents this activity from appearing in the recent apps list.
+            - `android:theme="@android:style/Theme.DeviceDefault.Light.Panel"` provides a panel-like appearance.
+        -->
         <activity
             android:name=".LaunchVPN"
             android:excludeFromRecents="true"
@@ -29,10 +58,18 @@
             android:theme="@android:style/Theme.DeviceDefault.Light.Panel">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
-
                 <category android:name="android.intent.category.DEFAULT" />
             </intent-filter>
         </activity>
+
+        <!-- Activity: DisconnectVPNActivity -->
+        <!--
+            Purpose: Activity for handling VPN disconnection.
+            - `android:excludeFromRecents="true"` keeps it hidden from the recent apps list.
+            - `android:noHistory="true"` ensures the activity is not kept in the activity stack after it finishes.
+            - `android:taskAffinity=".DisconnectVPN"` isolates the task affinity, ensuring it runs in its own task.
+            - `android:theme="@style/blinkt.dialog"` applies a custom dialog-like theme.
+        -->
         <activity
             android:name=".DisconnectVPNActivity"
             android:excludeFromRecents="true"
