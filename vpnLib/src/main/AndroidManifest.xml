@@ -2,21 +2,23 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     package="de.blinkt.openvpn">
-
     <!-- Required permissions for the VPN application -->
-
     <!-- Permission to access the internet, necessary for establishing VPN connections -->
     <uses-permission android:name="android.permission.INTERNET" />
-
     <!-- Permission to check network state, used to monitor the status of the network connection -->
     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
-
     <!-- Permission to run foreground services, required for long-running tasks like maintaining VPN connections -->
     <uses-permission android:name="android.permission.FOREGROUND_SERVICE" />
-
     <!-- Permission to post notifications, required for Android 13 (API 33) and above -->
     <uses-permission android:name="android.permission.POST_NOTIFICATIONS" />
-
+    <!-- Foreground service system exempted permission for Android 14 -->
+    <uses-permission
+    android:name="android.permission.FOREGROUND_SERVICE_SYSTEM_EXEMPTED"
+    android:minSdkVersion="34" />
+    <!-- Permission to post notifications, specific to Android 13+ -->
+    <uses-permission
+    android:name="android.permission.POST_NOTIFICATIONS"
+    tools:targetApi="33" />
     <application>
         <!-- Activity: VPNHelper -->
         <!--
@@ -28,7 +30,9 @@
             android:name=".VPNHelper"
             android:exported="true"
             tools:ignore="Instantiatable" />
-
+        <meta-data
+        android:name="com.example.vpn.NOTIFICATION_CHANNEL_ID"
+        android:value="vpn_service_channel" />
         <!-- Service: OpenVPNService -->
         <!--
             Purpose: Core service that handles VPN functionality.
@@ -43,7 +47,6 @@
                 <action android:name="android.net.VpnService" />
             </intent-filter>
         </service>
-
         <!-- Activity: LaunchVPN -->
         <!--
             Purpose: Entry point for launching the VPN functionality.
@@ -61,7 +64,6 @@
                 <category android:name="android.intent.category.DEFAULT" />
             </intent-filter>
         </activity>
-
         <!-- Activity: DisconnectVPNActivity -->
         <!--
             Purpose: Activity for handling VPN disconnection.
@@ -78,5 +80,4 @@
             android:taskAffinity=".DisconnectVPN"
             android:theme="@style/blinkt.dialog" />
     </application>
-
 </manifest>
